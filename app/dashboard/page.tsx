@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Sidebar, MobileMenuButton } from "@/components/sidebar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { FileText, AlertTriangle, CheckCircle, Clock, TrendingUp, Upload } from "lucide-react"
+import { FileText, AlertTriangle, CheckCircle, Clock, TrendingUp, Upload, Plus, RefreshCw } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 const recentAnalyses = [
   {
@@ -12,7 +13,7 @@ const recentAnalyses = [
     name: "Service_Agreement_TechCorp_2024.pdf",
     status: "completed",
     riskScore: 76,
-    date: "2 hours ago",
+    date: "Aug 9",
     requester: "John Smith",
   },
   {
@@ -20,7 +21,7 @@ const recentAnalyses = [
     name: "NDA_GlobalTech_Partners.docx",
     status: "completed",
     riskScore: 35,
-    date: "1 day ago",
+    date: "Aug 9",
     requester: "Sarah Jones",
   },
   {
@@ -28,7 +29,7 @@ const recentAnalyses = [
     name: "Software_License_Agreement_Q1_2024.pdf",
     status: "analyzing",
     riskScore: null,
-    date: "5 minutes ago",
+    date: "Aug 9",
     requester: "Mike Wilson",
   },
 ]
@@ -36,36 +37,51 @@ const recentAnalyses = [
 const stats = [
   {
     title: "Total Analyses",
-    value: "24",
-    change: "+12%",
+    value: "3",
+    change: "+12% this month",
     icon: FileText,
     color: "text-blue-600",
   },
   {
-    title: "High Risk Contracts",
-    value: "3",
-    change: "-25%",
-    icon: AlertTriangle,
-    color: "text-red-600",
-  },
-  {
-    title: "Completed This Week",
-    value: "8",
-    change: "+33%",
+    title: "Completed",
+    value: "2",
+    change: "98% success rate",
     icon: CheckCircle,
     color: "text-green-600",
   },
   {
-    title: "Avg. Processing Time",
-    value: "2.3m",
-    change: "-15%",
+    title: "In Progress",
+    value: "1",
+    change: "Avg 2.5 min",
     icon: Clock,
-    color: "text-purple-600",
+    color: "text-orange-600",
   },
+  {
+    title: "High Risk Found",
+    value: "1",
+    change: "Risk prevented",
+    icon: AlertTriangle,
+    color: "text-red-600",
+  },
+]
+
+const riskDistribution = [
+  { level: "Low Risk", count: 0, color: "bg-green-500" },
+  { level: "Medium Risk", count: 1, color: "bg-yellow-500" },
+  { level: "High Risk", count: 0, color: "bg-orange-500" },
+  { level: "Critical Risk", count: 1, color: "bg-red-500" },
 ]
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const router = useRouter()
+
+  const handleAnalyzeNewContract = () => {
+    router.push("/upload")
+  }
+
+  const totalAnalyzed = 2
+  const highRiskRate = 50.0
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -84,9 +100,16 @@ export default function Dashboard() {
             <MobileMenuButton onClick={() => setSidebarOpen(true)} />
           </div>
 
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600">Monitor your contract analysis workflow</p>
+          {/* Header with title and Analyze New Contract button */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Contract Analysis Dashboard</h1>
+              <p className="text-gray-600">AI-powered contract risk assessment and automation</p>
+            </div>
+            <Button onClick={handleAnalyzeNewContract} className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Analyze New Contract
+            </Button>
           </div>
 
           {/* Stats Grid */}
@@ -99,7 +122,6 @@ export default function Dashboard() {
                       <p className="text-sm font-medium text-gray-600">{stat.title}</p>
                       <p className="text-xl lg:text-2xl font-bold text-gray-900">{stat.value}</p>
                       <p className="text-sm text-green-600 flex items-center mt-1">
-                        <TrendingUp className="w-4 h-4 mr-1" />
                         {stat.change}
                       </p>
                     </div>
@@ -110,35 +132,40 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Quick Actions */}
+          {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
+            {/* Recent Analyses */}
             <Card className="lg:col-span-2">
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Recent Analyses</CardTitle>
+                <Button variant="outline" size="sm">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh
+                </Button>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {recentAnalyses.map((analysis) => (
                     <div
                       key={analysis.id}
-                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 rounded-lg"
+                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
                     >
-                      <div className="flex items-center space-x-4 mb-3 sm:mb-0">
+                      <div className="flex items-center space-x-4">
                         <div className="flex-shrink-0">
-                          <FileText className="w-6 h-6 lg:w-8 lg:h-8 text-blue-600" />
+                          <FileText className="w-6 h-6 text-blue-600" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="font-medium text-gray-900 truncate">{analysis.name}</p>
                           <p className="text-sm text-gray-600">
-                            {analysis.requester} • {analysis.date}
+                            {analysis.requester} {analysis.date}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-end">
+                      <div className="flex items-center space-x-2">
                         {analysis.status === "completed" ? (
-                          <div className="text-right">
+                          <>
                             <div
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-medium ${
                                 analysis.riskScore! > 70
                                   ? "bg-red-100 text-red-800"
                                   : analysis.riskScore! > 40
@@ -146,16 +173,16 @@ export default function Dashboard() {
                                     : "bg-green-100 text-green-800"
                               }`}
                             >
-                              Risk Score: {analysis.riskScore}
+                              {analysis.riskScore}
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">Completed</p>
-                          </div>
+                            <Button size="sm" variant="outline" className="text-green-600 border-green-600">
+                              Completed
+                            </Button>
+                          </>
                         ) : (
-                          <div className="text-right">
-                            <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                              Analyzing...
-                            </div>
-                          </div>
+                          <Button size="sm" variant="outline" className="text-blue-600 border-blue-600">
+                            Analyzing
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -164,33 +191,71 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button className="w-full justify-start" onClick={() => (window.location.href = "/upload")}>
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload New Contract
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start bg-transparent"
-                  onClick={() => (window.location.href = "/history")}
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  View All Analyses
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start bg-transparent"
-                  onClick={() => (window.location.href = "/settings")}
-                >
-                  <AlertTriangle className="w-4 h-4 mr-2" />
-                  Configure Alerts
-                </Button>
-              </CardContent>
-            </Card>
+            {/* Right Column */}
+            <div className="space-y-6">
+              {/* Risk Distribution */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Risk Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {riskDistribution.map((risk) => (
+                      <div key={risk.level} className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <div className={`w-3 h-3 rounded-full ${risk.color}`}></div>
+                          <span className="text-sm text-gray-700">{risk.level}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium">{risk.count}</span>
+                          {risk.count > 0 && (
+                            <div className={`w-12 h-2 rounded-full ${risk.color} opacity-60`}></div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Total Analyzed: {totalAnalyzed}</span>
+                      <span className="text-red-600 font-medium">High Risk Rate: {highRiskRate}%</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Quick Actions */}
+              <Card className="bg-blue-900 text-white">
+                <CardHeader>
+                  <CardTitle className="text-white">Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900"
+                    onClick={() => router.push("/upload")}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Upload New Contract
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900"
+                    onClick={() => router.push("/history")}
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    View All Analyses
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900"
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    Email Templates
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </main>
