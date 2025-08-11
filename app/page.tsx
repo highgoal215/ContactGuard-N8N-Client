@@ -38,7 +38,7 @@ export default function LandingPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
                 <Shield className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">ContractGuard</span>
+              <span className="text-2xl font-bold bg-gradient-to-l from-indigo-500 to-purple-600 bg-clip-text text-transparent">ContractGuard</span>
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
