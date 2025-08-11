@@ -260,7 +260,7 @@ export default function LandingPage() {
             <div className="relative">
               <Card className="border-0 shadow-2xl">
                 <CardContent className="p-0">
-                  <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-8 text-white">
+                  <div className="bg-gradient-to-br  from-blue-600 to-purple-600 p-8 text-white">
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center space-x-3">
                         <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
