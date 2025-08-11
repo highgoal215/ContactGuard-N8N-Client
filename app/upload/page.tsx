@@ -3,18 +3,21 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Sidebar } from "@/components/sidebar"
+import { Sidebar, MobileMenuButton } from "@/components/sidebar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Upload, FileText, File, Clock, ArrowLeft, CheckCircle } from "lucide-react"
+import { Upload, FileText, File, Clock, ArrowLeft, CheckCircle, User, Send, AlertCircle } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function UploadContract() {
   const [dragActive, setDragActive] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const router = useRouter()
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -54,35 +57,49 @@ export default function UploadContract() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="flex-1 overflow-auto">
-        <div className="p-8">
-          <div className="mb-8 flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => window.history.back()}>
+        <div className="p-4 lg:p-8">
+          {/* Mobile header */}
+          <div className="flex items-center justify-between mb-6 lg:hidden">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
+                <Upload className="h-5 w-5 text-white" />
+              </div>
+              <h1 className="text-lg font-semibold text-gray-900">ContractGuard</h1>
+            </div>
+            <MobileMenuButton onClick={() => setSidebarOpen(true)} />
+          </div>
+
+          {/* Header with back button */}
+          <div className="mb-6 lg:mb-8 flex flex-col sm:flex-row sm:items-center gap-4">
+            <Button variant="ghost" size="sm" onClick={() => router.back()} className="w-full sm:w-auto">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Upload Contract for Analysis</h1>
-              <p className="text-gray-600">AI-powered risk assessment and compliance checking</p>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Upload Contract for Analysis</h1>
+              <p className="text-sm sm:text-base text-gray-600">AI-powered risk assessment and compliance checking</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Upload Section */}
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            {/* Left Section: Upload Contract Document */}
+            <div>
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Upload className="w-5 h-5 text-blue-600" />
-                    Upload Contract Document
-                  </CardTitle>
-                  <p className="text-sm text-gray-600">Upload your PDF or Word document for AI-powered risk analysis</p>
+                  <div>
+                    <div className="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-lg bg-blue-600 mb-3">
+                      <Upload className="h-6 w-6 lg:h-7 lg:w-7 text-white" />
+                    </div>
+                    <CardTitle className="text-lg lg:text-xl">Upload Contract Document</CardTitle>
+                    <p className="text-sm text-gray-600">Upload your PDF or Word document for AI-powered risk analysis</p>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div
-                    className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                    className={`relative border-2 border-dashed rounded-lg p-6 lg:p-8 text-center transition-colors ${
                       dragActive
                         ? "border-blue-500 bg-blue-50"
                         : uploadedFile
@@ -100,108 +117,127 @@ export default function UploadContract() {
                       onChange={handleFileSelect}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     />
-
-                    {uploadedFile ? (
-                      <div className="space-y-4">
-                        <CheckCircle className="w-12 h-12 text-green-600 mx-auto" />
-                        <div>
-                          <p className="text-lg font-medium text-gray-900">{uploadedFile.name}</p>
-                          <p className="text-sm text-gray-600">{(uploadedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                        </div>
-                        <Button variant="outline" size="sm" onClick={() => setUploadedFile(null)}>
-                          Remove File
-                        </Button>
+                    <div className="space-y-3 lg:space-y-4">
+                      <FileText className="mx-auto h-12 w-12 lg:h-16 lg:w-16 text-gray-400" />
+                      <div>
+                        <p className="text-base lg:text-lg font-medium text-gray-900 break-words">
+                          {uploadedFile ? uploadedFile.name : "Drag and drop your file here, or click to browse"}
+                        </p>
+                        <p className="text-xs lg:text-sm text-gray-600 mt-2">
+                          Supports PDF, DOC, and DOCX files up to 10MB
+                        </p>
                       </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <FileText className="w-12 h-12 text-gray-400 mx-auto" />
-                        <div>
-                          <p className="text-lg font-medium text-gray-900">
-                            Drag and drop your file here, or click to browse
-                          </p>
-                          <p className="text-sm text-gray-600">Supports PDF, DOC, and DOCX files up to 10MB</p>
-                        </div>
-                      </div>
-                    )}
+                    </div>
                   </div>
 
-                  <div className="flex items-center justify-center gap-8 mt-6 text-sm text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <File className="w-4 h-4 text-red-600" />
-                      PDF Files
+                  {/* File Type Indicators */}
+                  <div className="flex justify-center gap-4 lg:gap-8 mt-4 lg:mt-6">
+                    <div className="flex flex-col items-center">
+                      <div className="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded bg-red-100">
+                        <FileText className="h-4 w-4 lg:h-5 lg:w-5 text-red-600" />
+                      </div>
+                      <span className="text-xs text-gray-600 mt-1">PDF Files</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-blue-600" />
-                      Word Docs
+                    <div className="flex flex-col items-center">
+                      <div className="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded bg-blue-100">
+                        <FileText className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600" />
+                      </div>
+                      <span className="text-xs text-gray-600 mt-1">Word Docs</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-purple-600" />
-                      Up to 10MB
+                    <div className="flex flex-col items-center">
+                      <div className="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-full bg-purple-100">
+                        <AlertCircle className="h-4 w-4 lg:h-5 lg:w-5 text-purple-600" />
+                      </div>
+                      <span className="text-xs text-gray-600 mt-1">Up to 10MB</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Requester Information */}
-            <div className="space-y-6">
+            {/* Right Section: Requester Information and Analysis Details */}
+            <div className="space-y-4 lg:space-y-6">
+              {/* Requester Information */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Requester Information</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" />
+                    <CardTitle className="text-lg">Requester Information</CardTitle>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="fullName">Full Name *</Label>
-                    <Input id="fullName" placeholder="Enter your full name" className="mt-1" />
+                    <Label htmlFor="fullName" className="text-sm">Full Name *</Label>
+                    <Input
+                      id="fullName"
+                      type="text"
+                      placeholder="Enter your full name"
+                      className="mt-1"
+                    />
                   </div>
-
                   <div>
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input id="email" type="email" placeholder="your.email@company.com" className="mt-1" />
+                    <Label htmlFor="email" className="text-sm">Email Address *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@company.com"
+                      className="mt-1"
+                    />
                   </div>
-
                   <div>
-                    <Label htmlFor="notes">Additional Notes (Optional)</Label>
+                    <Label htmlFor="notes" className="text-sm">Additional Notes (Optional)</Label>
                     <Textarea
                       id="notes"
                       placeholder="Any specific concerns or areas to focus on..."
-                      className="mt-1 min-h-[80px]"
+                      className="mt-1"
+                      rows={3}
                     />
                   </div>
                 </CardContent>
               </Card>
 
+              {/* What We'll Analyze */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">What We'll Analyze</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" />
+                    <CardTitle className="text-lg">What We'll Analyze</CardTitle>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-gray-700">
-                    <li>• Liability clauses and risk exposure</li>
-                    <li>• Insurance requirements and gaps</li>
-                    <li>• Termination conditions and penalties</li>
-                    <li>• Contract duration and renewal terms</li>
-                    <li>• Other potential legal concerns</li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></div>
+                      <span>Liability clauses and risk exposure</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></div>
+                      <span>Insurance requirements and gaps</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></div>
+                      <span>Termination conditions and penalties</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></div>
+                      <span>Contract duration and renewal terms</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></div>
+                      <span>Other potential legal concerns</span>
+                    </li>
                   </ul>
                 </CardContent>
               </Card>
 
-              <Button
-                className="w-full h-12 text-base"
+              {/* Start AI Analysis Button */}
+              <Button 
+                onClick={handleAnalysis} 
+                className="w-full bg-blue-600 hover:bg-blue-700 h-12 lg:h-14 text-base lg:text-lg"
                 disabled={!uploadedFile || isAnalyzing}
-                onClick={handleAnalysis}
               >
-                {isAnalyzing ? (
-                  <>
-                    <Clock className="w-4 h-4 mr-2 animate-spin" />
-                    Analyzing Contract...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Start AI Analysis
-                  </>
-                )}
+                <Send className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
+                {isAnalyzing ? "Analyzing..." : "Start AI Analysis"}
               </Button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Sidebar } from "@/components/sidebar"
+import { Sidebar, MobileMenuButton } from "@/components/sidebar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -24,6 +24,7 @@ export default function Settings() {
     emailOnHighRisk: true,
     weeklySummary: false,
   })
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleSave = () => {
     // Save settings logic here
@@ -32,30 +33,41 @@ export default function Settings() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="flex-1 overflow-auto">
-        <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <SettingsIcon className="w-6 h-6" />
-              Settings
-            </h1>
-            <p className="text-gray-600">Configure your contract analysis preferences and automation settings</p>
+        <div className="p-4 lg:p-8">
+          {/* Mobile header */}
+          <div className="flex items-center justify-between mb-6 lg:hidden">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
+                <SettingsIcon className="h-5 w-5 text-white" />
+              </div>
+              <h1 className="text-lg font-semibold text-gray-900">ContractGuard</h1>
+            </div>
+            <MobileMenuButton onClick={() => setSidebarOpen(true)} />
           </div>
 
-          <div className="space-y-6">
+          <div className="mb-6 lg:mb-8">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <SettingsIcon className="w-5 h-5 lg:w-6 lg:h-6" />
+              Settings
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600">Configure your contract analysis preferences and automation settings</p>
+          </div>
+
+          <div className="space-y-4 lg:space-y-6">
             {/* Email Template Settings */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Mail className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Mail className="w-4 h-4 lg:w-5 lg:h-5" />
                   Email Template Settings
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="emailSubject">Email Subject Template</Label>
+                  <Label htmlFor="emailSubject" className="text-sm">Email Subject Template</Label>
                   <Input
                     id="emailSubject"
                     value={settings.emailSubject}
@@ -68,7 +80,7 @@ export default function Settings() {
                 </div>
 
                 <div>
-                  <Label htmlFor="emailSignature">Email Signature</Label>
+                  <Label htmlFor="emailSignature" className="text-sm">Email Signature</Label>
                   <Textarea
                     id="emailSignature"
                     value={settings.emailSignature}
@@ -77,11 +89,11 @@ export default function Settings() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <Label>Include Risk Score in Email</Label>
-                      <p className="text-sm text-gray-600">Show overall risk score in email subject and body</p>
+                    <div className="flex-1 min-w-0">
+                      <Label className="text-sm">Include Risk Score in Email</Label>
+                      <p className="text-xs lg:text-sm text-gray-600">Show overall risk score in email subject and body</p>
                     </div>
                     <Switch
                       checked={settings.includeRiskScore}
@@ -90,9 +102,9 @@ export default function Settings() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div>
-                      <Label>Include Recommendations</Label>
-                      <p className="text-sm text-gray-600">Include AI-generated recommendations in email</p>
+                    <div className="flex-1 min-w-0">
+                      <Label className="text-sm">Include Recommendations</Label>
+                      <p className="text-xs lg:text-sm text-gray-600">Add actionable recommendations to email</p>
                     </div>
                     <Switch
                       checked={settings.includeRecommendations}
@@ -103,60 +115,53 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            {/* Analysis Settings */}
+            {/* Notification Settings */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="w-5 h-5" />
-                  Analysis Settings
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Bell className="w-4 h-4 lg:w-5 lg:h-5" />
+                  Notification Settings
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Auto-Send Analysis Email</Label>
-                    <p className="text-sm text-gray-600">Automatically send analysis results via email</p>
-                  </div>
-                  <Switch
-                    checked={settings.autoSendEmail}
-                    onCheckedChange={(checked) => setSettings({ ...settings, autoSendEmail: checked })}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="riskThreshold">High Risk Threshold</Label>
-                  <Input
-                    id="riskThreshold"
-                    type="number"
-                    value={settings.highRiskThreshold}
-                    onChange={(e) => setSettings({ ...settings, highRiskThreshold: Number.parseInt(e.target.value) })}
-                    className="mt-1 w-32"
-                    min="1"
-                    max="100"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Scores above this threshold will be flagged as high risk</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <Label>Detailed Analysis</Label>
-                      <p className="text-sm text-gray-600">
-                        Provide more comprehensive analysis with additional context
-                      </p>
+                    <div className="flex-1 min-w-0">
+                      <Label className="text-sm">Auto-send Email on Complete</Label>
+                      <p className="text-xs lg:text-sm text-gray-600">Automatically send results via email</p>
                     </div>
                     <Switch
-                      checked={settings.detailedAnalysis}
-                      onCheckedChange={(checked) => setSettings({ ...settings, detailedAnalysis: checked })}
+                      checked={settings.autoSendEmail}
+                      onCheckedChange={(checked) => setSettings({ ...settings, autoSendEmail: checked })}
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div>
-                      <Label>Include Legal Advice Disclaimer</Label>
-                      <p className="text-sm text-gray-600">
-                        Add disclaimer that analysis doesn't constitute legal advice
-                      </p>
+                    <div className="flex-1 min-w-0">
+                      <Label className="text-sm">Email on High Risk</Label>
+                      <p className="text-xs lg:text-sm text-gray-600">Send immediate notification for high-risk contracts</p>
+                    </div>
+                    <Switch
+                      checked={settings.emailOnHighRisk}
+                      onCheckedChange={(checked) => setSettings({ ...settings, emailOnHighRisk: checked })}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <Label className="text-sm">Weekly Summary</Label>
+                      <p className="text-xs lg:text-sm text-gray-600">Receive weekly analysis summary</p>
+                    </div>
+                    <Switch
+                      checked={settings.weeklySummary}
+                      onCheckedChange={(checked) => setSettings({ ...settings, weeklySummary: checked })}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <Label className="text-sm">Legal Disclaimer</Label>
+                      <p className="text-xs lg:text-sm text-gray-600">Include legal disclaimer in emails</p>
                     </div>
                     <Switch
                       checked={settings.legalDisclaimer}
@@ -167,57 +172,51 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            {/* Notification Settings */}
+            {/* Analysis Settings */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bell className="w-5 h-5" />
-                  Notification Settings
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Shield className="w-4 h-4 lg:w-5 lg:h-5" />
+                  Analysis Settings
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Email on Analysis Complete</Label>
-                    <p className="text-sm text-gray-600">Get notified when analysis is completed</p>
+                <div>
+                  <Label htmlFor="highRiskThreshold" className="text-sm">High Risk Threshold</Label>
+                  <div className="flex items-center gap-4 mt-1">
+                    <Input
+                      id="highRiskThreshold"
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={settings.highRiskThreshold}
+                      onChange={(e) => setSettings({ ...settings, highRiskThreshold: parseInt(e.target.value) })}
+                      className="w-20"
+                    />
+                    <span className="text-sm text-gray-600">% (0-100)</span>
                   </div>
-                  <Switch
-                    checked={settings.emailOnComplete}
-                    onCheckedChange={(checked) => setSettings({ ...settings, emailOnComplete: checked })}
-                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Contracts with risk scores above this threshold will be flagged as high risk
+                  </p>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Email on High Risk Detection</Label>
-                    <p className="text-sm text-gray-600">Get immediate alerts for high-risk contracts</p>
+                  <div className="flex-1 min-w-0">
+                    <Label className="text-sm">Detailed Analysis</Label>
+                    <p className="text-xs lg:text-sm text-gray-600">Perform comprehensive contract analysis</p>
                   </div>
                   <Switch
-                    checked={settings.emailOnHighRisk}
-                    onCheckedChange={(checked) => setSettings({ ...settings, emailOnHighRisk: checked })}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Weekly Summary Reports</Label>
-                    <p className="text-sm text-gray-600">Receive weekly summaries of all analyses</p>
-                  </div>
-                  <Switch
-                    checked={settings.weeklySummary}
-                    onCheckedChange={(checked) => setSettings({ ...settings, weeklySummary: checked })}
+                    checked={settings.detailedAnalysis}
+                    onCheckedChange={(checked) => setSettings({ ...settings, detailedAnalysis: checked })}
                   />
                 </div>
               </CardContent>
             </Card>
 
             {/* Save Button */}
-            <div className="flex justify-between items-center">
-              <Button variant="outline" onClick={() => window.location.reload()}>
-                Reset to Defaults
-              </Button>
-              <Button onClick={handleSave} className="flex items-center gap-2">
-                <Save className="w-4 h-4" />
+            <div className="flex justify-end">
+              <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+                <Save className="w-4 h-4 mr-2" />
                 Save Settings
               </Button>
             </div>
