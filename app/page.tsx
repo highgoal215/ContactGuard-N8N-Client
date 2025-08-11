@@ -38,7 +38,7 @@ export default function LandingPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
                 <Shield className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">ContractGuard</span>
+              <span className="text-2xl font-bold bg-gradient-to-l from-indigo-500 to-purple-600 bg-clip-text text-transparent">ContractGuard</span>
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
@@ -50,12 +50,12 @@ export default function LandingPage() {
 
             <div className="flex items-center space-x-4">
               <Link href="/signin">
-                <Button variant="outline" size="sm">
+                <Button variant="outline"  size="sm">
                   Sign In
                 </Button>
               </Link>
               <Link href="/dashboard">
-                <Button size="sm">
+                <Button variant="outline" className="bg-[#4A48FF] text-white" size="sm">
                   Get Started
                 </Button>
               </Link>
@@ -78,14 +78,14 @@ export default function LandingPage() {
               <span className="text-blue-600"> Contract Risk Assessment</span>
             </h1>
             
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Automate contract analysis, identify risks, and ensure compliance with AI-powered insights. 
+            <p className="text-2xl font-semibold text-black mb-8 max-w-3xl mx-auto">
+              Automate contract analysis, identify risks, and ensure compliance with AI-powered insights.
               Get comprehensive risk assessments in minutes, not hours.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link href="/dashboard">
-                <Button size="lg" className="text-lg px-8 py-3">
+                <Button  size="lg" className="text-lg px-8 py-3 hover:bg-[#4A48FF] text-white ">
                   Start Free Analysis
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -139,10 +139,12 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 mb-4">
-                  <AlertTriangle className="h-6 w-6 text-red-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Liability Assessment</h3>
+               <div className="flex justify-start items-center gap-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 mb-4">
+                    <AlertTriangle className="h-6 w-6 text-red-600" />
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-2">Liability Assessment</h3>
+               </div>
                 <p className="text-gray-600">
                   Identify unlimited liability clauses, indemnification risks, and potential exposure areas
                 </p>
@@ -151,10 +153,12 @@ export default function LandingPage() {
 
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 mb-4">
-                  <Shield className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Insurance Gaps</h3>
+               <div className="flex justify-start items-center gap-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 mb-4">
+                    <Shield className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-2">Insurance Gaps</h3>
+               </div>
                 <p className="text-gray-600">
                   Detect missing insurance requirements and coverage gaps that could leave you exposed
                 </p>
@@ -163,10 +167,12 @@ export default function LandingPage() {
 
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100 mb-4">
-                  <Clock className="h-6 w-6 text-yellow-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Termination Terms</h3>
+               <div className="flex justify-start items-center gap-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100 mb-4">
+                    <Clock className="h-6 w-6 text-yellow-600" />
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-2">Termination Terms</h3>
+               </div>
                 <p className="text-gray-600">
                   Review termination conditions, penalties, and renewal terms for hidden risks
                 </p>
@@ -175,10 +181,12 @@ export default function LandingPage() {
 
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 mb-4">
-                  <FileText className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Legal Compliance</h3>
+               <div className="flex justify-start items-center gap-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 mb-4">
+                    <FileText className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-2">Legal Compliance</h3>
+               </div>
                 <p className="text-gray-600">
                   Ensure contracts meet regulatory requirements and industry standards
                 </p>
@@ -187,10 +195,12 @@ export default function LandingPage() {
 
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100 mb-4">
-                  <BarChart3 className="h-6 w-6 text-purple-600" />
+                <div className="flex justify-start items-center gap-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100 mb-4">
+                    <BarChart3 className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-2">Risk Scoring</h3>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Risk Scoring</h3>
                 <p className="text-gray-600">
                   Get detailed risk scores and prioritized recommendations for contract improvements
                 </p>
@@ -199,10 +209,12 @@ export default function LandingPage() {
 
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100 mb-4">
-                  <Mail className="h-6 w-6 text-indigo-600" />
+                <div className="flex justify-start items-center gap-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100 mb-4">
+                    <Mail className="h-6 w-6 text-indigo-600" />
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-2">Automated Reports</h3>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Automated Reports</h3>
                 <p className="text-gray-600">
                   Receive comprehensive analysis reports via email with actionable insights
                 </p>
@@ -419,7 +431,7 @@ export default function LandingPage() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-blue-600">
+            <Button size="lg" variant="outline" className="text-lg px-8 py-3  text-black hover:bg-[#4A48FF] hover:text-white ">
               <Phone className="mr-2 h-5 w-5" />
               Schedule Demo
             </Button>
