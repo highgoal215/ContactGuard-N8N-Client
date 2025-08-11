@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Sidebar } from "@/components/sidebar"
+import { Sidebar, MobileMenuButton } from "@/components/sidebar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +15,7 @@ export default function UploadContract() {
   const [dragActive, setDragActive] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -54,10 +55,21 @@ export default function UploadContract() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="flex-1 overflow-auto">
-        <div className="p-8">
+        <div className="p-4 lg:p-8">
+          {/* Mobile header */}
+          <div className="flex items-center justify-between mb-6 lg:hidden">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
+                <Upload className="h-5 w-5 text-white" />
+              </div>
+              <h1 className="text-lg font-semibold text-gray-900">ContractGuard</h1>
+            </div>
+            <MobileMenuButton onClick={() => setSidebarOpen(true)} />
+          </div>
+
           <div className="mb-8 flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => window.history.back()}>
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -69,7 +81,7 @@ export default function UploadContract() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
             {/* Upload Section */}
             <div className="lg:col-span-2">
               <Card>
@@ -82,7 +94,7 @@ export default function UploadContract() {
                 </CardHeader>
                 <CardContent>
                   <div
-                    className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                    className={`relative border-2 border-dashed rounded-lg p-6 lg:p-8 text-center transition-colors ${
                       dragActive
                         ? "border-blue-500 bg-blue-50"
                         : uploadedFile
@@ -100,109 +112,118 @@ export default function UploadContract() {
                       onChange={handleFileSelect}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     />
-
-                    {uploadedFile ? (
-                      <div className="space-y-4">
-                        <CheckCircle className="w-12 h-12 text-green-600 mx-auto" />
-                        <div>
-                          <p className="text-lg font-medium text-gray-900">{uploadedFile.name}</p>
-                          <p className="text-sm text-gray-600">{(uploadedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                        </div>
-                        <Button variant="outline" size="sm" onClick={() => setUploadedFile(null)}>
-                          Remove File
-                        </Button>
+                    <div className="space-y-4">
+                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                      <div>
+                        <p className="text-lg font-medium text-gray-900">
+                          {uploadedFile ? uploadedFile.name : "Drop your file here"}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {uploadedFile ? "File selected successfully" : "or click to browse"}
+                        </p>
                       </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <FileText className="w-12 h-12 text-gray-400 mx-auto" />
-                        <div>
-                          <p className="text-lg font-medium text-gray-900">
-                            Drag and drop your file here, or click to browse
-                          </p>
-                          <p className="text-sm text-gray-600">Supports PDF, DOC, and DOCX files up to 10MB</p>
-                        </div>
-                      </div>
-                    )}
+                    </div>
                   </div>
+                </CardContent>
+              </Card>
 
-                  <div className="flex items-center justify-center gap-8 mt-6 text-sm text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <File className="w-4 h-4 text-red-600" />
-                      PDF Files
+              {/* Analysis Options */}
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Analysis Options</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="requester">Requester Email</Label>
+                      <Input
+                        id="requester"
+                        type="email"
+                        placeholder="analyst@company.com"
+                        className="mt-1"
+                      />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-blue-600" />
-                      Word Docs
+                    <div>
+                      <Label htmlFor="priority">Priority Level</Label>
+                      <select
+                        id="priority"
+                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                      </select>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-purple-600" />
-                      Up to 10MB
-                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="notes">Additional Notes</Label>
+                    <Textarea
+                      id="notes"
+                      placeholder="Any specific concerns or areas to focus on..."
+                      className="mt-1"
+                      rows={3}
+                    />
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Requester Information */}
-            <div className="space-y-6">
+            {/* Analysis Progress */}
+            <div>
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Requester Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="fullName">Full Name *</Label>
-                    <Input id="fullName" placeholder="Enter your full name" className="mt-1" />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input id="email" type="email" placeholder="your.email@company.com" className="mt-1" />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="notes">Additional Notes (Optional)</Label>
-                    <Textarea
-                      id="notes"
-                      placeholder="Any specific concerns or areas to focus on..."
-                      className="mt-1 min-h-[80px]"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">What We'll Analyze</CardTitle>
+                  <CardTitle>Analysis Progress</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li>• Liability clauses and risk exposure</li>
-                    <li>• Insurance requirements and gaps</li>
-                    <li>• Termination conditions and penalties</li>
-                    <li>• Contract duration and renewal terms</li>
-                    <li>• Other potential legal concerns</li>
-                  </ul>
+                  {!uploadedFile ? (
+                    <div className="text-center py-8">
+                      <FileText className="mx-auto h-12 w-12 text-gray-400" />
+                      <p className="mt-2 text-sm text-gray-600">Upload a file to start analysis</p>
+                    </div>
+                  ) : isAnalyzing ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Analyzing contract...</p>
+                          <p className="text-xs text-gray-600">This may take a few minutes</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                          <span className="text-sm text-gray-700">Document uploaded</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+                          <span className="text-sm text-gray-700">AI analysis in progress</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Clock className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm text-gray-500">Risk assessment pending</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-6 w-6 text-green-600" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Ready for analysis</p>
+                          <p className="text-xs text-gray-600">File: {uploadedFile.name}</p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={handleAnalysis}
+                        className="w-full"
+                        disabled={isAnalyzing}
+                      >
+                        {isAnalyzing ? "Analyzing..." : "Start Analysis"}
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
-
-              <Button
-                className="w-full h-12 text-base"
-                disabled={!uploadedFile || isAnalyzing}
-                onClick={handleAnalysis}
-              >
-                {isAnalyzing ? (
-                  <>
-                    <Clock className="w-4 h-4 mr-2 animate-spin" />
-                    Analyzing Contract...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Start AI Analysis
-                  </>
-                )}
-              </Button>
             </div>
           </div>
         </div>

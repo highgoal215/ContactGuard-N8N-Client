@@ -1,6 +1,7 @@
 "use client"
 
-import { Sidebar } from "@/components/sidebar"
+import { useState } from "react"
+import { Sidebar, MobileMenuButton } from "@/components/sidebar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FileText, AlertTriangle, CheckCircle, Clock, TrendingUp, Upload } from "lucide-react"
@@ -64,32 +65,45 @@ const stats = [
 ]
 
 export default function Dashboard() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="flex-1 overflow-auto">
-        <div className="p-8">
+        <div className="p-4 lg:p-8">
+          {/* Mobile header */}
+          <div className="flex items-center justify-between mb-6 lg:hidden">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
+                <FileText className="h-5 w-5 text-white" />
+              </div>
+              <h1 className="text-lg font-semibold text-gray-900">ContractGuard</h1>
+            </div>
+            <MobileMenuButton onClick={() => setSidebarOpen(true)} />
+          </div>
+
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
             <p className="text-gray-600">Monitor your contract analysis workflow</p>
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
             {stats.map((stat) => (
               <Card key={stat.title}>
-                <CardContent className="p-6">
+                <CardContent className="p-4 lg:p-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                      <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                      <p className="text-xl lg:text-2xl font-bold text-gray-900">{stat.value}</p>
                       <p className="text-sm text-green-600 flex items-center mt-1">
                         <TrendingUp className="w-4 h-4 mr-1" />
                         {stat.change}
                       </p>
                     </div>
-                    <stat.icon className={`w-8 h-8 ${stat.color}`} />
+                    <stat.icon className={`w-6 h-6 lg:w-8 lg:h-8 ${stat.color}`} />
                   </div>
                 </CardContent>
               </Card>
@@ -97,7 +111,7 @@ export default function Dashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
             <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle>Recent Analyses</CardTitle>
@@ -107,20 +121,20 @@ export default function Dashboard() {
                   {recentAnalyses.map((analysis) => (
                     <div
                       key={analysis.id}
-                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 rounded-lg"
                     >
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-4 mb-3 sm:mb-0">
                         <div className="flex-shrink-0">
-                          <FileText className="w-8 h-8 text-blue-600" />
+                          <FileText className="w-6 h-6 lg:w-8 lg:h-8 text-blue-600" />
                         </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{analysis.name}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-gray-900 truncate">{analysis.name}</p>
                           <p className="text-sm text-gray-600">
                             {analysis.requester} • {analysis.date}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-center justify-end">
                         {analysis.status === "completed" ? (
                           <div className="text-right">
                             <div
