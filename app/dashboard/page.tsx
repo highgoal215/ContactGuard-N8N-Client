@@ -101,31 +101,34 @@ export default function Dashboard() {
           </div>
 
           {/* Header with title and Analyze New Contract button */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Contract Analysis Dashboard</h1>
-              <p className="text-gray-600">AI-powered contract risk assessment and automation</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Contract Analysis Dashboard</h1>
+              <p className="text-sm sm:text-base text-gray-600">AI-powered contract risk assessment and automation</p>
             </div>
-            <Button onClick={handleAnalyzeNewContract} className="bg-blue-600 hover:bg-blue-700">
+            <Button 
+              onClick={handleAnalyzeNewContract} 
+              className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Analyze New Contract
             </Button>
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-6 lg:mb-8">
             {stats.map((stat) => (
               <Card key={stat.title}>
-                <CardContent className="p-4 lg:p-6">
+                <CardContent className="p-3 lg:p-6">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                      <p className="text-xl lg:text-2xl font-bold text-gray-900">{stat.value}</p>
-                      <p className="text-sm text-green-600 flex items-center mt-1">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs lg:text-sm font-medium text-gray-600 truncate">{stat.title}</p>
+                      <p className="text-lg lg:text-2xl font-bold text-gray-900">{stat.value}</p>
+                      <p className="text-xs lg:text-sm text-green-600 flex items-center mt-1 truncate">
                         {stat.change}
                       </p>
                     </div>
-                    <stat.icon className={`w-6 h-6 lg:w-8 lg:h-8 ${stat.color}`} />
+                    <stat.icon className={`w-5 h-5 lg:w-8 lg:h-8 flex-shrink-0 ${stat.color}`} />
                   </div>
                 </CardContent>
               </Card>
@@ -133,39 +136,39 @@ export default function Dashboard() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
             {/* Recent Analyses */}
             <Card className="lg:col-span-2">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Recent Analyses</CardTitle>
-                <Button variant="outline" size="sm">
+              <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <CardTitle className="text-lg">Recent Analyses</CardTitle>
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Refresh
                 </Button>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3 lg:space-y-4">
                   {recentAnalyses.map((analysis) => (
                     <div
                       key={analysis.id}
-                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 lg:p-4 border border-gray-200 rounded-lg gap-3"
                     >
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-start sm:items-center space-x-3 min-w-0 flex-1">
                         <div className="flex-shrink-0">
-                          <FileText className="w-6 h-6 text-blue-600" />
+                          <FileText className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-medium text-gray-900 truncate">{analysis.name}</p>
-                          <p className="text-sm text-gray-600">
+                          <p className="font-medium text-gray-900 text-sm lg:text-base break-words">{analysis.name}</p>
+                          <p className="text-xs lg:text-sm text-gray-600">
                             {analysis.requester} {analysis.date}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-end sm:justify-start space-x-2">
                         {analysis.status === "completed" ? (
                           <>
                             <div
-                              className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-medium ${
+                              className={`inline-flex items-center justify-center w-7 h-7 lg:w-8 lg:h-8 rounded-full text-xs font-medium ${
                                 analysis.riskScore! > 70
                                   ? "bg-red-100 text-red-800"
                                   : analysis.riskScore! > 40
@@ -175,12 +178,12 @@ export default function Dashboard() {
                             >
                               {analysis.riskScore}
                             </div>
-                            <Button size="sm" variant="outline" className="text-green-600 border-green-600">
-                              Completed
+                            <Button size="sm" variant="outline" className="text-green-600 border-green-600 text-xs lg:text-sm">
+                              Complete
                             </Button>
                           </>
                         ) : (
-                          <Button size="sm" variant="outline" className="text-blue-600 border-blue-600">
+                          <Button size="sm" variant="outline" className="text-blue-600 border-blue-600 text-xs lg:text-sm">
                             Analyzing
                           </Button>
                         )}
@@ -192,11 +195,11 @@ export default function Dashboard() {
             </Card>
 
             {/* Right Column */}
-            <div className="space-y-6">
+            <div className="space-y-4 lg:space-y-6">
               {/* Risk Distribution */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Risk Distribution</CardTitle>
+                  <CardTitle className="text-lg">Risk Distribution</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -209,14 +212,14 @@ export default function Dashboard() {
                         <div className="flex items-center space-x-2">
                           <span className="text-sm font-medium">{risk.count}</span>
                           {risk.count > 0 && (
-                            <div className={`w-12 h-2 rounded-full ${risk.color} opacity-60`}></div>
+                            <div className={`w-8 lg:w-12 h-2 rounded-full ${risk.color} opacity-60`}></div>
                           )}
                         </div>
                       </div>
                     ))}
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-2 text-sm">
                       <span className="text-gray-600">Total Analyzed: {totalAnalyzed}</span>
                       <span className="text-red-600 font-medium">High Risk Rate: {highRiskRate}%</span>
                     </div>
@@ -227,12 +230,12 @@ export default function Dashboard() {
               {/* Quick Actions */}
               <Card className="bg-blue-900 text-white">
                 <CardHeader>
-                  <CardTitle className="text-white">Quick Actions</CardTitle>
+                  <CardTitle className="text-white text-lg">Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900"
+                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900 text-sm"
                     onClick={() => router.push("/upload")}
                   >
                     <Plus className="w-4 h-4 mr-2" />
@@ -240,7 +243,7 @@ export default function Dashboard() {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900"
+                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900 text-sm"
                     onClick={() => router.push("/history")}
                   >
                     <FileText className="w-4 h-4 mr-2" />
@@ -248,7 +251,7 @@ export default function Dashboard() {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900"
+                    className="w-full justify-start bg-transparent text-white border-white hover:bg-white hover:text-blue-900 text-sm"
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     Email Templates
