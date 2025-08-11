@@ -233,7 +233,7 @@ export default function UploadContract() {
               {/* Start AI Analysis Button */}
               <Button 
                 onClick={handleAnalysis} 
-                className="w-full bg-blue-600 hover:bg-blue-700 h-12 lg:h-14 text-base lg:text-lg"
+                className="w-full bg-[#4A48FF] hover:bg-blue-700 h-12 lg:h-14 text-base lg:text-lg"
                 disabled={!uploadedFile || isAnalyzing}
               >
                 <Send className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />

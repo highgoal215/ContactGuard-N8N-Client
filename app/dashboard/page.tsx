@@ -108,7 +108,7 @@ export default function Dashboard() {
             </div>
             <Button 
               onClick={handleAnalyzeNewContract} 
-              className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+              className="bg-[#4A48FF] hover:bg-blue-700 w-full sm:w-auto"
             >
               <Plus className="w-4 h-4 mr-2" />
               Analyze New Contract
@@ -228,7 +228,7 @@ export default function Dashboard() {
               </Card>
 
               {/* Quick Actions */}
-              <Card className="bg-blue-900 text-white">
+              <Card className="bg-[#4A48FF] text-white">
                 <CardHeader>
                   <CardTitle className="text-white text-lg">Quick Actions</CardTitle>
                 </CardHeader>

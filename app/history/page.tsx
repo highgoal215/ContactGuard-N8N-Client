@@ -144,10 +144,6 @@ export default function AnalysisHistory() {
                 <option>Low Risk</option>
               </select>
             </div>
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-600">Filters applied</span>
-            </div>
           </div>
 
           {/* Analysis List */}
